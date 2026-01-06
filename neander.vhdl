@@ -54,10 +54,8 @@ ARCHITECTURE deumedo OF neander IS
         );
     END COMPONENT moduloPC;
 
-
-
     SIGNAL sAC_nrw, sMEM_nrw : STD_LOGIC;
-    SIGNAL snbarrPC, sREM_nrw, sRDM_nrw, sRI_nrw, nbarrINC, sPC_nrw: STD_LOGIC;
+    SIGNAL snbarrPC, sREM_nrw, sRDM_nrw, sRI_nrw, nbarrINC, sPC_nrw : STD_LOGIC;
     SIGNAL sula_op : STD_LOGIC_VECTOR(2 DOWNTO 0);
     SIGNAL sflags_nz : STD_LOGIC_VECTOR (1 DOWNTO 0);
     SIGNAL sbarramento : STD_LOGIC_VECTOR(7 DOWNTO 0);
@@ -66,8 +64,6 @@ ARCHITECTURE deumedo OF neander IS
     SIGNAL sbctrl : STD_LOGIC_VECTOR(10 DOWNTO 0);
 
 BEGIN
-
-
     u_ULA : moduloULA PORT MAP(
         rst => rst,
         clk => clk,
@@ -89,16 +85,14 @@ BEGIN
         end_Barr => sbarramento,
         barramento => sbarramento
     );
-
-
----------------------- ARRUMAR -----------------------------
+    ---------------------- ARRUMAR -----------------------------
     u_UC : moduloUC PORT MAP(
         rst => rst,
         clk => clk,
         barramento => sbarramento,
         RI_nrw => sRI_nrw,
         flags_nz => sflags_nz,
-        bctrl => sbctrl,
+        bctrl => sbctrl
     );
 
     u_PC : moduloPC PORT MAP(
@@ -107,9 +101,17 @@ BEGIN
         PC_nrw => sPC_nrw,
         nbarrINC => snbarrINC,
         barramento => sbarramento,
-        endereco => sendereco,
+        endereco => sendereco
     );
 
-    snbarrINC <= sbtrcl(10);
+    snbarrINC <= sbctrl(10);
+    sPC_nrw <= sbctrl(9);
+    sRI_nrw <= sbctrl(8);
+    sAC_nrw <= sbctrl(7);
+    sMEM_nrw <= sbctrl(6);
+    sula_op <= sbctrl(5 DOWNTO 3);
+    sREM_nrw <= sbctrl(2);
+    sRDM_nrw <= sbctrl(1);
+    snbarrPC <= sbctrl(0);
 
 END ARCHITECTURE;

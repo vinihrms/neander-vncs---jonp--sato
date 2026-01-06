@@ -47,14 +47,14 @@ BEGIN
 
     u_regREM : regCarga8bit PORT MAP(s_mux2rem, clk, '1', rst, REM_nrw, s_rem2mem);
     --memoria 
-    u_mem : as_ ram PORT MAP(s_rem2mem, s_mem2rdm, MEM_nrw, rst);
+    u_mem : as_ram PORT MAP(s_rem2mem, s_mem2rdm, MEM_nrw, rst);
 
     --registrador RDM
-    u_regRDM : regCarga8bit PORT MAP(s_re2mem, clk, '1', rst, RDM_nrw, s_rdm2barr);
+    u_regRDM : regCarga8bit PORT MAP(s_rem2mem, clk, '1', rst, RDM_nrw, s_rdm2barr);
     
     -- isso é TRAP (MIXTAPE) killer vai brandaozin lanca aquele slatt !
     barramento <= s_rdm2barr when MEM_nrw = '0' else (others => 'Z');
     s_mem2rdm <= barramento when MEM_nrw = '1'else (others => 'Z');
     
 
-END ARCHITECTURE;
+END ARCHITECTURE dropabelico;

@@ -5,7 +5,7 @@ ENTITY moduloULAinterno IS
     PORT (
         x, y : IN STD_LOGIC_VECTOR(7 DOWNTO 0);
         ula_op : IN STD_LOGIC_VECTOR(2 DOWNTO 0);
-        flags_nz : IN STD_LOGIC_VECTOR(1 DOWNTO 0);
+        flags_nz : OUT STD_LOGIC_VECTOR(1 DOWNTO 0); -- Change made to reflect internal driving of flags
         s : OUT STD_LOGIC_VECTOR(7 DOWNTO 0)
     );
 END ENTITY moduloULAinterno;
@@ -20,17 +20,17 @@ ARCHITECTURE thefato OF moduloULAinterno IS
             c_out : OUT BIT
         );
     END COMPONENT;
-    SIGNAL sadd, sor, sand, snot, slda, s_resultado : STD_LOGIC_VECTOR(7 downton 0);
+    SIGNAL sadd, sor, sand, snot, slda, s_resultado : STD_LOGIC_VECTOR(7 DOWNTO 0);
     SIGNAL scout : STD_LOGIC;
 BEGIN
 
     -- LDA
 
-    slda < y;
+    slda <= y;
 
     -- ADD
 
-    u_somador : somador8b PORT MAP('0', x, y, sadd, scout);
+    u_somador : soma_8b PORT MAP('0', x, y, sadd, scout);
 
     -- OR
 
@@ -54,28 +54,28 @@ BEGIN
     sand(7) <= x(7) AND y(7);
 
     -- NOT
-    snot <= (x);
+    snot <= NOT(x);
 
     -- MULTIPLEXADOR
 
-    s_resultado  <= slda WHEN ula_op = "000" ELSE
-                    sadd WHEN ula_op = "001" ELSE
-                    sor WHEN ula_op = "010" ELSE
-                    sand WHEN ula_op = "011" ELSE
-                    snot WHEN ula_op = "100" ELSE
-                    (OTHERS => 'Z');
+    s_resultado <= slda WHEN ula_op = "000" ELSE
+        sadd WHEN ula_op = "001" ELSE
+        sor WHEN ula_op = "010" ELSE
+        sand WHEN ula_op = "011" ELSE
+        snot WHEN ula_op = "100" ELSE
+        (OTHERS => 'Z');
 
     -- DETECTOR NZ FLAGS
-    
+
     --flags_nz
     -- flag N que é a flag de NEGATIVO
     flags_nz(1) <= s_resultado(7);
 
     -- flag Z que é a flag de ZETO
 
-    flags_nz(0) <= not(s_resultado(7) or s_resultado(6) or s_resultado(5)
-                    or s_resultado(4) or s_resultado(3) or s_resultado(2)
-                    or s_resultado(1) or s_resultado(0));
+    flags_nz(0) <= NOT(s_resultado(7) OR s_resultado(6) OR s_resultado(5)
+    OR s_resultado(4) OR s_resultado(3) OR s_resultado(2)
+    OR s_resultado(1) OR s_resultado(0));
 
     s <= s_resultado;
 END ARCHITECTURE thefato;

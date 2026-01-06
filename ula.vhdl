@@ -8,7 +8,7 @@ ENTITY moduloULA IS
         AC_nrw : IN STD_LOGIC;
         ula_op : IN STD_LOGIC_VECTOR(2 DOWNTO 0);
         mem_nrw : IN STD_LOGIC;
-        flags_nz : IN STD_LOGIC_VECTOR(1 DOWNTO 0);
+        flags_nz : OUT STD_LOGIC_VECTOR(1 DOWNTO 0);
         barramento : INOUT STD_LOGIC_VECTOR(7 DOWNTO 0)
     );
 END ENTITY moduloULA;
@@ -38,7 +38,7 @@ ARCHITECTURE xtranho OF moduloULA IS
         PORT (
             x, y : IN STD_LOGIC_VECTOR(7 DOWNTO 0);
             ula_op : IN STD_LOGIC_VECTOR(2 DOWNTO 0);
-            flags_nz : IN STD_LOGIC_VECTOR(1 DOWNTO 0);
+            flags_nz : OUT STD_LOGIC_VECTOR(1 DOWNTO 0);
             s : OUT STD_LOGIC_VECTOR(7 DOWNTO 0)
         );
     END COMPONENT moduloULAinterno;

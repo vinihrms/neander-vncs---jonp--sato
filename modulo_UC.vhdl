@@ -84,15 +84,37 @@ BEGIN
     u_contadorI : contador PORT MAP('1', rst, clk, s_ciclo);
 
     -- Unidade de Controle
-
+    SIGNAL sNOP, sSTA, sLDA, sADD, sOR, sAND, sNOT, sJMP, sJN, sJZ, sHLT : STD_LOGIC_VECTOR(10 DOWNTO 0);
     --um mux 11 especial
+
+
+    
     -- EXEMPLO LDA FAZER PARA OS OUTROS BAGULHO
-    s_bctrl <= sLDA when s_dec2uc = "00100000000"
+    s_bctrl <= sNOP WHEN s_dec2uc = "10000000000" ELSE -- NOP
+        sSTA WHEN s_dec2uc = "01000000000" ELSE -- STA
+        sLDA WHEN s_dec2uc = "00100000000" ELSE -- LDA
+        sADD WHEN s_dec2uc = "00010000000" ELSE -- ADD
+        sOR WHEN s_dec2uc = "00001000000" ELSE -- OR
+        sAND WHEN s_dec2uc = "00000100000" ELSE -- AND
+        sNOT WHEN s_dec2uc = "00000010000" ELSE -- NOT
+        sJMP WHEN s_dec2uc = "00000001000" ELSE -- JMP
+        sJN WHEN s_dec2uc = "00000000100" ELSE -- JN
+        sJZ WHEN s_dec2uc = "00000000010" ELSE -- JZ
+        sHLT WHEN s_dec2uc = "00000000001" ELSE -- HLT
+        (OTHERS => 'Z'); -- caso erro/instrução inválida
 
     --instanciar cada uma das instrucoes
-    u_load : LDA port map(s_ciclo, sLDA);
-
-    u_halt : HLT port map(s_ciclo, sHLT); 
+    u_nop : NOP PORT MAP(s_ciclo, sNOP);
+    u_sta : STA PORT MAP(s_ciclo, sSTA);
+    u_load : LDA PORT MAP(s_ciclo, sLDA);
+    u_add : ADD PORT MAP(s_ciclo, sADD);
+    u_or : OR_INST PORT MAP(s_ciclo, sOR);
+    u_and : AND_INST PORT MAP(s_ciclo, sAND);
+    u_not : NOT_INST PORT MAP(s_ciclo, sNOT);
+    u_jmp : JMP PORT MAP(s_ciclo, sJMP);
+    u_jn : JN PORT MAP(s_ciclo, sJN);
+    u_jz : JZ PORT MAP(s_ciclo, sJZ);
+    u_halt : HLT PORT MAP(s_ciclo, sHLT);
     --fazer um sinal para cada um
 
 END ARCHITECTURE maXado;
