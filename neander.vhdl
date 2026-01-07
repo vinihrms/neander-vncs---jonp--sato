@@ -4,7 +4,7 @@ USE ieee.std_logic_1164.ALL;
 ENTITY neander IS
     PORT (
         rst : IN STD_LOGIC;
-        clk : IN STD_LOGIC;
+        clk : IN STD_LOGIC
     );
 END ENTITY neander;
 
@@ -29,7 +29,7 @@ ARCHITECTURE deumedo OF neander IS
             AC_nrw : IN STD_LOGIC;
             ula_op : IN STD_LOGIC_VECTOR(2 DOWNTO 0);
             mem_nrw : IN STD_LOGIC;
-            flags_nz : IN STD_LOGIC_VECTOR(1 DOWNTO 0);
+            flags_nz : OUT STD_LOGIC_VECTOR(1 DOWNTO 0);
             barramento : INOUT STD_LOGIC_VECTOR(7 DOWNTO 0)
         );
     END COMPONENT moduloULA;
@@ -38,7 +38,7 @@ ARCHITECTURE deumedo OF neander IS
         PORT (
             rst, clk : IN STD_LOGIC;
             barramento : IN STD_LOGIC_VECTOR(7 DOWNTO 0);
-            RI_nrw : IN STD_LOGIC;
+            RI_nrw : OUT STD_LOGIC;
             flags_nz : IN STD_LOGIC_VECTOR(1 DOWNTO 0);
             bctrl : OUT STD_LOGIC_VECTOR(10 DOWNTO 0)
         );
@@ -54,14 +54,15 @@ ARCHITECTURE deumedo OF neander IS
         );
     END COMPONENT moduloPC;
 
-    SIGNAL sAC_nrw, sMEM_nrw : STD_LOGIC;
-    SIGNAL snbarrPC, sREM_nrw, sRDM_nrw, sRI_nrw, nbarrINC, sPC_nrw : STD_LOGIC;
-    SIGNAL sula_op : STD_LOGIC_VECTOR(2 DOWNTO 0);
-    SIGNAL sflags_nz : STD_LOGIC_VECTOR (1 DOWNTO 0);
-    SIGNAL sbarramento : STD_LOGIC_VECTOR(7 DOWNTO 0);
-    SIGNAL sendereco : STD_LOGIC_VECTOR(7 DOWNTO 0);
-    SIGNAL send_PC : STD_LOGIC_VECTOR(7 DOWNTO 0);
-    SIGNAL sbctrl : STD_LOGIC_VECTOR(10 DOWNTO 0);
+SIGNAL sAC_nrw, sMEM_nrw : STD_LOGIC;
+SIGNAL snbarrPC, snbarrINC, sREM_nrw, sRDM_nrw, sRI_nrw, sPC_nrw : STD_LOGIC;
+SIGNAL sula_op : STD_LOGIC_VECTOR(2 DOWNTO 0);
+SIGNAL sflags_nz : STD_LOGIC_VECTOR (1 DOWNTO 0);
+SIGNAL sbarramento : STD_LOGIC_VECTOR(7 DOWNTO 0);
+SIGNAL sendereco : STD_LOGIC_VECTOR(7 DOWNTO 0);
+SIGNAL send_PC : STD_LOGIC_VECTOR(7 DOWNTO 0);
+SIGNAL sbctrl : STD_LOGIC_VECTOR(10 DOWNTO 0);
+
 
 BEGIN
     u_ULA : moduloULA PORT MAP(
@@ -113,5 +114,7 @@ BEGIN
     sREM_nrw <= sbctrl(2);
     sRDM_nrw <= sbctrl(1);
     snbarrPC <= sbctrl(0);
+    -- PC address forwarded to MEM address input
+    send_PC <= sendereco;
 
 END ARCHITECTURE;

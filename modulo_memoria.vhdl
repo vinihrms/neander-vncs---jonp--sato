@@ -50,7 +50,7 @@ BEGIN
     u_mem : as_ram PORT MAP(s_rem2mem, s_mem2rdm, MEM_nrw, rst);
 
     --registrador RDM
-    u_regRDM : regCarga8bit PORT MAP(s_rem2mem, clk, '1', rst, RDM_nrw, s_rdm2barr);
+    u_regRDM : regCarga8bit PORT MAP(s_mem2rdm, clk, '1', rst, RDM_nrw, s_rdm2barr);
     
     -- isso é TRAP (MIXTAPE) killer vai brandaozin lanca aquele slatt !
     barramento <= s_rdm2barr when MEM_nrw = '0' else (others => 'Z');

@@ -6,7 +6,7 @@ ENTITY moduloUC IS
     PORT (
         rst, clk : IN STD_LOGIC;
         barramento : IN STD_LOGIC_VECTOR(7 DOWNTO 0);
-        RI_nrw : IN STD_LOGIC;
+        RI_nrw : OUT STD_LOGIC;
         flags_nz : IN STD_LOGIC_VECTOR(1 DOWNTO 0);
         bctrl : OUT STD_LOGIC_VECTOR(10 DOWNTO 0)
     );
@@ -58,14 +58,91 @@ ARCHITECTURE maXado OF moduloUC IS
     COMPONENT LDA IS
         PORT (
             ciclo : IN STD_LOGIC_VECTOR(2 DOWNTO 0);
-            saida : OUT STD_LOGIC_VECTOR(10 DOWNTO 0);
+            saida : OUT STD_LOGIC_VECTOR(10 DOWNTO 0)
         );
     END COMPONENT;
-    --fazer para todas as outras possiveis escolhas
+    
+    COMPONENT STA IS
+        PORT (
+            ciclo : IN STD_LOGIC_VECTOR(2 DOWNTO 0);
+            saida : OUT STD_LOGIC_VECTOR(10 DOWNTO 0)
+        );
+    END COMPONENT;
+
+ COMPONENT UC_ADD IS
+        PORT (
+            ciclo : IN STD_LOGIC_VECTOR(2 DOWNTO 0);
+            saida : OUT STD_LOGIC_VECTOR(10 DOWNTO 0)
+        );
+    END COMPONENT;
+
+ COMPONENT UC_OR IS
+        PORT (
+            ciclo : IN STD_LOGIC_VECTOR(2 DOWNTO 0);
+            saida : OUT STD_LOGIC_VECTOR(10 DOWNTO 0)
+        );
+    END COMPONENT;
+
+     COMPONENT UC_AND IS
+        PORT (
+            ciclo : IN STD_LOGIC_VECTOR(2 DOWNTO 0);
+            saida : OUT STD_LOGIC_VECTOR(10 DOWNTO 0)
+        );
+    END COMPONENT;
+
+    COMPONENT UC_NOT IS
+        PORT (
+            ciclo : IN STD_LOGIC_VECTOR(2 DOWNTO 0);
+            saida : OUT STD_LOGIC_VECTOR(10 DOWNTO 0)
+        );
+    END COMPONENT;
+
+     COMPONENT NOP IS
+        PORT (
+            ciclo : IN STD_LOGIC_VECTOR(2 DOWNTO 0);
+            saida : OUT STD_LOGIC_VECTOR(10 DOWNTO 0)
+        );
+    END COMPONENT;
+
+
+     COMPONENT HLT IS
+        PORT (
+            ciclo : IN STD_LOGIC_VECTOR(2 DOWNTO 0);
+            saida : OUT STD_LOGIC_VECTOR(10 DOWNTO 0)
+        );
+    END COMPONENT;
+
+     COMPONENT JMP IS
+        PORT (
+            ciclo : IN STD_LOGIC_VECTOR(2 DOWNTO 0);
+            saida : OUT STD_LOGIC_VECTOR(10 DOWNTO 0)
+        );
+    END COMPONENT;
+
+
+     COMPONENT JN IS
+        PORT (
+            ciclo : IN STD_LOGIC_VECTOR(2 DOWNTO 0);
+            flags : IN STD_LOGIC_VECTOR(1 DOWNTO 0);
+            saida : OUT STD_LOGIC_VECTOR(10 DOWNTO 0)
+        );
+    END COMPONENT;
+
+ COMPONENT JZ IS
+        PORT (
+            ciclo : IN STD_LOGIC_VECTOR(2 DOWNTO 0);
+            flags : IN STD_LOGIC_VECTOR(1 DOWNTO 0);
+            saida : OUT STD_LOGIC_VECTOR(10 DOWNTO 0)
+        );
+    END COMPONENT;
+
+    -- Unidade de Controle - Sinais para cada instrução
+    SIGNAL sNOP, sSTA, sLDA, sADD, sOR, sAND, sNOT, sJMP, sJN, sJZ, sHLT : STD_LOGIC_VECTOR(10 DOWNTO 0);
 
 BEGIN
     -- registrador RI
-    u_regI : regCarga8bit PORT MAP(barramento, clk, '1', rst, RI_nrw, s_ri2dec);
+    u_regI : regCarga8bit PORT MAP(barramento, clk, '1', rst, s_bctrl(8), s_ri2dec);
+    
     -- decodificador 4 para 11
     s_dec2uc <= "10000000000" WHEN s_ri2dec(7 DOWNTO 4) = "0000" ELSE --NOP
         "01000000000" WHEN s_ri2dec(7 DOWNTO 4) = "0001" ELSE --STA
@@ -83,13 +160,7 @@ BEGIN
     -- contador
     u_contadorI : contador PORT MAP('1', rst, clk, s_ciclo);
 
-    -- Unidade de Controle
-    SIGNAL sNOP, sSTA, sLDA, sADD, sOR, sAND, sNOT, sJMP, sJN, sJZ, sHLT : STD_LOGIC_VECTOR(10 DOWNTO 0);
-    --um mux 11 especial
-
-
-    
-    -- EXEMPLO LDA FAZER PARA OS OUTROS BAGULHO
+    -- Multiplexador 11 para saída de controle
     s_bctrl <= sNOP WHEN s_dec2uc = "10000000000" ELSE -- NOP
         sSTA WHEN s_dec2uc = "01000000000" ELSE -- STA
         sLDA WHEN s_dec2uc = "00100000000" ELSE -- LDA
@@ -103,18 +174,20 @@ BEGIN
         sHLT WHEN s_dec2uc = "00000000001" ELSE -- HLT
         (OTHERS => 'Z'); -- caso erro/instrução inválida
 
-    --instanciar cada uma das instrucoes
+    -- Instanciar cada uma das instruções
     u_nop : NOP PORT MAP(s_ciclo, sNOP);
     u_sta : STA PORT MAP(s_ciclo, sSTA);
     u_load : LDA PORT MAP(s_ciclo, sLDA);
-    u_add : ADD PORT MAP(s_ciclo, sADD);
-    u_or : OR_INST PORT MAP(s_ciclo, sOR);
-    u_and : AND_INST PORT MAP(s_ciclo, sAND);
-    u_not : NOT_INST PORT MAP(s_ciclo, sNOT);
+    u_add : UC_ADD PORT MAP(s_ciclo, sADD);
+    u_or : UC_OR PORT MAP(s_ciclo, sOR);
+    u_and : UC_AND PORT MAP(s_ciclo, sAND);
+    u_not : UC_NOT PORT MAP(s_ciclo, sNOT);
     u_jmp : JMP PORT MAP(s_ciclo, sJMP);
-    u_jn : JN PORT MAP(s_ciclo, sJN);
-    u_jz : JZ PORT MAP(s_ciclo, sJZ);
+    u_jn : JN PORT MAP(s_ciclo, flags_nz, sJN);
+    u_jz : JZ PORT MAP(s_ciclo, flags_nz, sJZ);
     u_halt : HLT PORT MAP(s_ciclo, sHLT);
-    --fazer um sinal para cada um
 
+
+    bctrl <= s_bctrl;
+    RI_nrw <= s_bctrl(8);
 END ARCHITECTURE maXado;

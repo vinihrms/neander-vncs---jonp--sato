@@ -50,7 +50,7 @@ BEGIN
 
     -- registrador AC
     u_regAC : regCarga8bit PORT MAP(s_ula2ac, clk, '1', rst, AC_nrw, s_ac2ula);
-    -- registrador FLAGS
+    -- registrador FLAGS (atualiza junto com escrita no AC)
     u_regFlags : regCarga2Bits PORT MAP(s_ula2flags, clk, '1', rst, AC_nrw, flags_nz);
 
     -- modulo ULA interno

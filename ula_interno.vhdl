@@ -12,14 +12,14 @@ END ENTITY moduloULAinterno;
 
 ARCHITECTURE thefato OF moduloULAinterno IS
     COMPONENT soma_8b IS
-        PORT (
-            c_in : IN BIT;
-            a : IN bit_vector(7 DOWNTO 0);
-            b : IN bit_vector(7 DOWNTO 0);
-            s : OUT bit_vector(7 DOWNTO 0);
-            c_out : OUT BIT
-        );
-    END COMPONENT;
+    PORT (
+        c_in  : IN STD_LOGIC;
+        a     : IN STD_LOGIC_VECTOR(7 DOWNTO 0);
+        b     : IN STD_LOGIC_VECTOR(7 DOWNTO 0);
+        s     : OUT STD_LOGIC_VECTOR(7 DOWNTO 0);
+        c_out : OUT STD_LOGIC
+    );
+END COMPONENT;
     SIGNAL sadd, sor, sand, snot, slda, s_resultado : STD_LOGIC_VECTOR(7 DOWNTO 0);
     SIGNAL scout : STD_LOGIC;
 BEGIN
@@ -30,8 +30,7 @@ BEGIN
 
     -- ADD
 
-    u_somador : soma_8b PORT MAP('0', x, y, sadd, scout);
-
+u_somador : soma_8b PORT MAP('0', x, y, sadd, scout);
     -- OR
 
     sor(0) <= x(0) OR y(0);

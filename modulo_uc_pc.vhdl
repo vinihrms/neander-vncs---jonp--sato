@@ -27,18 +27,19 @@ ARCHITECTURE trucopedeseis OF moduloPC IS
 
     -- somador
     COMPONENT soma_8b IS
-        PORT (
-            c_in : IN BIT;
-            a : IN bit_vector(7 DOWNTO 0);
-            b : IN bit_vector(7 DOWNTO 0);
-            s : OUT bit_vector(7 DOWNTO 0);
-            c_out : OUT BIT
-        );
-    END COMPONENT;
+    PORT (
+        c_in  : IN STD_LOGIC;
+        a     : IN STD_LOGIC_VECTOR(7 DOWNTO 0);
+        b     : IN STD_LOGIC_VECTOR(7 DOWNTO 0);
+        s     : OUT STD_LOGIC_VECTOR(7 DOWNTO 0);
+        c_out : OUT STD_LOGIC
+    );
+END COMPONENT;
+
 
     SIGNAL sendereco, s_mux2pc : STD_LOGIC_VECTOR(7 DOWNTO 0) := (OTHERS => 'Z');
     SIGNAL sadd, x, y : STD_LOGIC_VECTOR(7 DOWNTO 0) := (OTHERS => 'Z');
-    SIGNAL saddc : STD_LOGIC;
+    SIGNAL scout : STD_LOGIC;
     SIGNAL s_um : STD_LOGIC_VECTOR(7 DOWNTO 0) := "00000001";
     SIGNAL s_pcAtual : STD_LOGIC_VECTOR(7 DOWNTO 0) := (OTHERS => 'Z');
 
@@ -52,8 +53,7 @@ BEGIN
     y <= s_pcAtual;
 
     -- ADDER
-    u_somaum : soma_8b PORT MAP('0', x, y, sadd, saddc);
-
+u_somador : soma_8b PORT MAP('0', x, y, sadd, scout);
     -- mux2x8
     s_mux2pc <= barramento WHEN nbarrINC = '0' ELSE
         sadd;
