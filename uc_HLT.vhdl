@@ -11,22 +11,24 @@ END ENTITY;
 ARCHITECTURE hlt OF HLT IS
 
 BEGIN
-    saida(10) <= '1';
+    -- HLT
+saida(10) <= '0';  -- barr_inc
 
-    saida(9) <= '0';
+saida(9) <= '0';   -- barr_PC
 
-    saida(8) <= '0';
+saida(8) <= '0';   -- RI_rw
 
-    saida(7) <= '0';
+saida(7) <= '0';   -- AC_rw
 
-    saida(6) <= '0';
+saida(6) <= '0';   -- MEM_rw
 
-    saida(5 DOWNTO 3) <= "000";
+saida(5 DOWNTO 3) <= "000";  -- ULA_op
 
-    saida(2) <= '0';
+saida(2) <= '0';   -- REM_rw
 
-    saida(1) <= '0';
+saida(1) <= '0';   -- RDM_rw
 
-    saida(0) <= '1';
+saida(0) <= '0';   -- barr_PC
+
 
 END ARCHITECTURE;

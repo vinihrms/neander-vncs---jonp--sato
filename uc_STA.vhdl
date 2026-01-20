@@ -1,33 +1,35 @@
 --Store
 LIBRARY ieee;
-USE ieee.std_logic_1164.all;
+USE ieee.std_logic_1164.ALL;
 
 ENTITY STA IS
-    PORT(
-        ciclo   : in std_logic_vector(2 downto 0);
-        saida   : out std_logic_vector(10 downto 0)
+    PORT (
+        ciclo : IN STD_LOGIC_VECTOR(2 DOWNTO 0);
+        saida : OUT STD_LOGIC_VECTOR(10 DOWNTO 0)
     );
 END ENTITY;
 
-architecture STORE of STA is
-    begin
-        
-        saida(10) <= '1';
+ARCHITECTURE STORE OF STA IS
+BEGIN
 
-        saida(9) <= (NOT ciclo(2) AND NOT ciclo(1) AND ciclo(0)) OR (ciclo(2) AND NOT ciclo(1) AND NOT ciclo(0));
+    -- STA
+    saida(10) <= '1'; -- barr_inc
 
-        saida(8) <= NOT ciclo(2) AND ciclo(1) AND NOT ciclo(0);
+    saida(9) <= (NOT ciclo(1) AND (ciclo(2) XOR ciclo(0))); -- barr_PC
 
-        saida(7) <= '0';
+    saida(8) <= (NOT ciclo(2) AND ciclo(1) AND NOT ciclo(0)); -- RI_rw
 
-        saida(6) <= ciclo(2) AND ciclo(1) AND NOT ciclo(0);
+    saida(7) <= (ciclo(2) AND ciclo(1) AND ciclo(0)); -- AC_rw
 
-        saida(5 downto 3) <= "000";
+    saida(6) <= '0'; -- MEM_rw
 
-        saida(2) <= (NOT ciclo(2) AND NOT ciclo(1) AND NOT ciclo(0)) OR (NOT ciclo(2) AND ciclo(1) AND ciclo(0)) OR (ciclo(2) AND NOT ciclo(1) AND ciclo(0));
+    saida(5 DOWNTO 3) <= "000"; -- ULA_op
 
-        saida(1) <= (NOT ciclo(2) AND NOT ciclo(1) AND ciclo(0)) OR (ciclo(2) AND NOT ciclo(1) AND NOT ciclo(0));
+    saida(2) <= ((NOT ciclo(0) AND NOT ciclo(2) AND NOT ciclo(1)) OR
+    (ciclo(0) AND (ciclo(2) XOR ciclo(1)))); -- REM_rw
 
-        saida(0) <= NOT((ciclo(2) AND NOT ciclo(1) AND ciclo(0)) OR (ciclo(2) AND ciclo(1) AND NOT ciclo(0)));
+    saida(1) <= ((ciclo(2) AND NOT ciclo(0)) OR
+    ((NOT ciclo(2)) AND (NOT ciclo(1)) AND ciclo(0))); -- RDM_rw
 
+    saida(0) <= (NOT ciclo(2) AND NOT ciclo(1) AND ciclo(0)); -- barr_PC
 END ARCHITECTURE;

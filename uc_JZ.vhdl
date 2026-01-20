@@ -15,28 +15,15 @@ BEGIN
     -- habilita JMP se Z = 1
     jmp_en <= flags(0);
 
-    saida(10) <= '1';
+    saida(10) <= NOT ciclo(2) AND NOT flags(0);               -- snbarrINC
+saida(9)  <= NOT ciclo(2) AND flags(0);                   -- sPC_nrw
+saida(8)  <= '0';                                        -- sRI_nrw
+saida(7)  <= '0';                                        -- sAC_nrw
+saida(6) <= '0';                                        -- sMEM_nrw
+saida(5 downto 3) <= "000";                               -- sula_op
+saida(2) <= NOT ciclo(2) AND (ciclo(1) XNOR ciclo(0));    -- sREM_nrw
+saida(1) <= NOT ciclo(1) AND (ciclo(2) XOR ciclo(0));     -- sRDM_nrw
+saida(0) <= NOT ciclo(2) AND ciclo(1) AND NOT ciclo(0);  -- snbarrPC
 
-    saida(9) <= jmp_en AND
-        ((NOT ciclo(2) AND NOT ciclo(1) AND ciclo(0)) OR
-         (ciclo(2) AND NOT ciclo(1) AND ciclo(0)));
-
-    saida(8) <= jmp_en AND (NOT ciclo(2) AND ciclo(1) AND NOT ciclo(0));
-
-    saida(7) <= '0';
-
-    saida(6) <= '0';
-
-    saida(5 DOWNTO 3) <= "000";
-
-    saida(2) <= jmp_en AND
-        ((NOT ciclo(2) AND NOT ciclo(1) AND NOT ciclo(0)) OR
-         (NOT ciclo(2) AND ciclo(1) AND ciclo(0)));
-
-    saida(1) <= jmp_en AND
-        ((NOT ciclo(2) AND NOT ciclo(1) AND ciclo(0)) OR
-         (ciclo(2) AND NOT ciclo(1) AND NOT ciclo(0)));
-
-    saida(0) <= NOT (jmp_en AND (ciclo(2) AND NOT ciclo(1) AND ciclo(0)));
 
 END ARCHITECTURE;
