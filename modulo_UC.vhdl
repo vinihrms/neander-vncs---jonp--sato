@@ -6,7 +6,7 @@ ENTITY moduloUC IS
     PORT (
         rst, clk : IN STD_LOGIC;
         barramento : IN STD_LOGIC_VECTOR(7 DOWNTO 0);
-        RI_nrw : OUT STD_LOGIC;
+        RI_nrw : IN STD_LOGIC;
         flags_nz : IN STD_LOGIC_VECTOR(1 DOWNTO 0);
         bctrl : OUT STD_LOGIC_VECTOR(10 DOWNTO 0)
     );
@@ -141,7 +141,7 @@ ARCHITECTURE maXado OF moduloUC IS
 
 BEGIN
     -- registrador RI
-    u_regI : regCarga8bit PORT MAP(barramento, clk, '1', rst, s_bctrl(8), s_ri2dec);
+    u_regI : regCarga8bit PORT MAP(barramento, clk, '1', rst, RI_nrw, s_ri2dec);
     
     -- decodificador 4 para 11
     s_dec2uc <= "10000000000" WHEN s_ri2dec(7 DOWNTO 4) = "0000" ELSE --NOP
@@ -189,5 +189,4 @@ BEGIN
 
 
     bctrl <= s_bctrl;
-    RI_nrw <= s_bctrl(8);
 END ARCHITECTURE maXado;

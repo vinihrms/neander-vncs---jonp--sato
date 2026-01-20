@@ -14,7 +14,7 @@ BEGIN
     -- LDA
     saida(10) <= '1'; -- barr_inc
 
-    saida(9) <= (NOT ciclo(1) AND (ciclo(2) XOR ciclo(0))); -- barr_PC
+    saida(9) <= (NOT ciclo(1) AND (ciclo(2) XOR ciclo(0))); -- PC nrw
 
     saida(8) <= (NOT ciclo(2) AND ciclo(1) AND NOT ciclo(0)); -- RI_rw
 
@@ -24,12 +24,14 @@ BEGIN
 
     saida(5 DOWNTO 3) <= "000"; -- ULA_op
 
-    saida(2) <= ((NOT ciclo(0) AND NOT ciclo(2) AND NOT ciclo(1)) OR
-    (ciclo(0) AND (ciclo(2) XOR ciclo(1)))); -- REM_rw
+    --saida(2) <= ((NOT ciclo(0) AND NOT ciclo(2) AND NOT ciclo(1)) OR
+    --(ciclo(0) AND (ciclo(2) XOR ciclo(1)))); -- REM_rw
+
+    saida(2) <= (NOT ciclo(1) AND (ciclo(2) XNOR ciclo(0))) OR (NOT ciclo(2) AND ciclo(1) AND ciclo(0));
 
     saida(1) <= ((ciclo(2) AND NOT ciclo(0)) OR
     ((NOT ciclo(2)) AND (NOT ciclo(1)) AND ciclo(0))); -- RDM_rw
 
-    saida(0) <= (NOT ciclo(2) AND ciclo(1) AND NOT ciclo(0)); -- barr_PC
+    saida(0) <= NOT ciclo(2) OR ciclo(1) OR NOT ciclo(0);-- barr_PC
     
 END ARCHITECTURE;

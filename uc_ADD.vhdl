@@ -11,25 +11,26 @@ END ENTITY;
 ARCHITECTURE UC_add OF UC_ADD IS
 
 BEGIN
-    -- ADD
+ -- LDA
     saida(10) <= '1'; -- barr_inc
 
-    saida(9) <= (NOT ciclo(1) AND (ciclo(2) XOR ciclo(0))) OR
-    (ciclo(2) AND ciclo(1) AND ciclo(0)); -- sPC_nrw
+    saida(9) <= (NOT ciclo(1) AND (ciclo(2) XOR ciclo(0))); -- PC nrw
 
-    saida(8) <= (NOT ciclo(2) AND ciclo(1) AND NOT ciclo(0)); -- sRI_nrw
+    saida(8) <= (NOT ciclo(2) AND ciclo(1) AND NOT ciclo(0)); -- RI_rw
 
-    saida(7) <= (ciclo(2) AND ciclo(1) AND ciclo(0)); -- sAC_nrw
+    saida(7) <= (ciclo(2) AND ciclo(1) AND ciclo(0)); -- AC_rw
 
-    saida(6) <= '0'; -- sMEM_nrw
+    saida(6) <= '0'; -- MEM_rw
 
-    saida(5 DOWNTO 3) <= "001"; -- sula_op
+    saida(5 DOWNTO 3) <= "001"; -- ULA_op
 
-    saida(2) <= ((NOT ciclo(0) AND NOT ciclo(2) AND NOT ciclo(1)) OR
-    (ciclo(0) AND (ciclo(2) XOR ciclo(1)))); -- sREM_nrw
+    --saida(2) <= ((NOT ciclo(0) AND NOT ciclo(2) AND NOT ciclo(1)) OR
+    --(ciclo(0) AND (ciclo(2) XOR ciclo(1)))); -- REM_rw
+
+    saida(2) <= (NOT ciclo(1) AND (ciclo(2) XNOR ciclo(0))) OR (NOT ciclo(2) AND ciclo(1) AND ciclo(0));
 
     saida(1) <= ((ciclo(2) AND NOT ciclo(0)) OR
-    ((NOT ciclo(2)) AND (NOT ciclo(1)) AND ciclo(0))); -- sRDM_nrw
+    ((NOT ciclo(2)) AND (NOT ciclo(1)) AND ciclo(0))); -- RDM_rw
 
-    saida(0) <= (NOT ciclo(2) AND NOT ciclo(1) AND ciclo(0)); -- snbarrPC
+    saida(0) <= NOT ciclo(2) OR ciclo(1) OR NOT ciclo(0);-- barr_PC
 END ARCHITECTURE;

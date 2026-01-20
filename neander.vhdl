@@ -38,7 +38,7 @@ ARCHITECTURE deumedo OF neander IS
         PORT (
             rst, clk : IN STD_LOGIC;
             barramento : IN STD_LOGIC_VECTOR(7 DOWNTO 0);
-            RI_nrw : OUT STD_LOGIC;
+            RI_nrw : IN STD_LOGIC;
             flags_nz : IN STD_LOGIC_VECTOR(1 DOWNTO 0);
             bctrl : OUT STD_LOGIC_VECTOR(10 DOWNTO 0)
         );
@@ -114,7 +114,6 @@ BEGIN
     sREM_nrw <= sbctrl(2);
     sRDM_nrw <= sbctrl(1);
     snbarrPC <= sbctrl(0);
-    -- PC address forwarded to MEM address input
     send_PC <= sendereco;
 
 END ARCHITECTURE;
