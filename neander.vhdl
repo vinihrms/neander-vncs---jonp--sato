@@ -114,6 +114,8 @@ BEGIN
     sREM_nrw <= sbctrl(2);
     sRDM_nrw <= sbctrl(1);
     snbarrPC <= sbctrl(0);
+
+    
     send_PC <= sendereco;
 
 END ARCHITECTURE;
