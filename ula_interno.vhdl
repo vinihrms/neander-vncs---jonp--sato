@@ -5,7 +5,7 @@ ENTITY moduloULAinterno IS
     PORT (
         x, y : IN STD_LOGIC_VECTOR(7 DOWNTO 0);
         ula_op : IN STD_LOGIC_VECTOR(2 DOWNTO 0);
-        flags_nz : OUT STD_LOGIC_VECTOR(1 DOWNTO 0); -- Change made to reflect internal driving of flags
+        flags_nz : OUT STD_LOGIC_VECTOR(1 DOWNTO 0); 
         s : OUT STD_LOGIC_VECTOR(7 DOWNTO 0)
     );
 END ENTITY moduloULAinterno;

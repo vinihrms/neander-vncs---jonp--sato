@@ -11,7 +11,7 @@ END ENTITY;
 ARCHITECTURE UC_add OF UC_ADD IS
 
 BEGIN
- -- LDA
+-- LDA
     saida(10) <= '1'; -- barr_inc
 
     saida(9) <= (NOT ciclo(1) AND (ciclo(2) XOR ciclo(0))); -- PC nrw
